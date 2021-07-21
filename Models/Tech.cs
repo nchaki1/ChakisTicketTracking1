@@ -10,10 +10,12 @@ namespace ChakisTicketTracking1.Models
         public int TechID { get; set; }
 
         // Last name of tech
+        [Display(Name ="Last Name")]
         [StringLength(50, ErrorMessage = "Last name cannot be longer than 50 characters.")]
         public string LastName { get; set; }
 
         // First name of tech
+        [Display(Name ="First Name")]
         [StringLength(50, ErrorMessage = "First name cannot be longer than 50 characters.")]
         public string FirstMidName { get; set; }
 

@@ -11,10 +11,12 @@ namespace ChakisTicketTracking1.Models
         public int TicketID { get; set; }
 
         // Date and time of service request
+        [Display(Name ="Request Date")]
         [DataType(DataType.DateTime)]
         public DateTime RequestDate { get; set; }
 
         // Description of user request
+        [Display(Name ="Request Description")]
         [MinLength(10)]
         public string TicketDescription { get; set; }
 

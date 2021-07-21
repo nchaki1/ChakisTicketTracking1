@@ -15,6 +15,7 @@ namespace ChakisTicketTracking1.Models
         public int TechID { get; set; }
 
         // Time and date of completion, if applicable
+        [Display(Name ="Date Completed")]
         [DataType(DataType.DateTime)]
         public DateTime? CompletionDate { get; set; }
         // Tech notes on the service ticket (can be an empty string if no notes)
