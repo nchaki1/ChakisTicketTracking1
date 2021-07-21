@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using ChakisTicketTracking1.DAL;
 using ChakisTicketTracking1.Models;
+using PagedList;
 using System.Data.Entity.Infrastructure;
 
 namespace ChakisTicketTracking1.Controllers
@@ -17,9 +18,43 @@ namespace ChakisTicketTracking1.Controllers
         private HelpDeskContext db = new HelpDeskContext();
 
         // GET: Tech
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(db.Techs.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var techs = from t in db.Techs
+                        select t;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                techs = techs.Where(t => t.LastName.Contains(searchString)
+                                         || t.FirstMidName.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    techs = techs.OrderByDescending(t => t.LastName);
+                    break;
+                default:
+                    techs = techs.OrderBy(t => t.LastName);
+                    break;
+            }
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(techs.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Tech/Details/5
