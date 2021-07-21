@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using ChakisTicketTracking1.DAL;
 using ChakisTicketTracking1.Models;
+using System.Data.Entity.Infrastructure;
 
 namespace ChakisTicketTracking1.Controllers
 {
@@ -47,13 +48,20 @@ namespace ChakisTicketTracking1.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TechID,LastName,FirstMidName")] Tech tech)
+        public ActionResult Create([Bind(Include = "LastName, FirstMidName")] Tech tech)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Techs.Add(tech);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Techs.Add(tech);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                ModelState.AddModelError("", "Unable to create tech. Try again, and if the problem persists see your system administrator.");
             }
 
             return View(tech);
@@ -77,25 +85,47 @@ namespace ChakisTicketTracking1.Controllers
         // POST: Tech/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TechID,LastName,FirstMidName")] Tech tech)
+        public ActionResult EditPost(int? techID)
         {
-            if (ModelState.IsValid)
+            if (techID == null)
             {
-                db.Entry(tech).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            return View(tech);
+
+            var techToUpdate = db.Techs.Find(techID);
+
+            if (TryUpdateModel(techToUpdate, "", new string[] { "LastName", "FirstMidName" }))
+            {
+                try
+                {
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                catch (RetryLimitExceededException /* dex */)
+                {
+                    ModelState.AddModelError("",
+                        "Unable to save edit. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+            return View(techToUpdate);
         }
 
+
         // GET: Tech/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage =
+                    "Delete failed. Try again, and if the problem persists see your system administrator.";
             }
             Tech tech = db.Techs.Find(id);
             if (tech == null)
@@ -110,9 +140,18 @@ namespace ChakisTicketTracking1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Tech tech = db.Techs.Find(id);
-            db.Techs.Remove(tech);
-            db.SaveChanges();
+            try
+            {
+
+                Tech tech = db.Techs.Find(id);
+                db.Techs.Remove(tech);
+                db.SaveChanges();
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
+
             return RedirectToAction("Index");
         }
 
