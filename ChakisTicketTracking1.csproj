@@ -141,6 +141,11 @@
     <Compile Include="Logging\HelpDeskInterceptor.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Migrations\202107211822332_InitialCreate.cs" />
+    <Compile Include="Migrations\202107211822332_InitialCreate.designer.cs">
+      <DependentUpon>202107211822332_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Assignment.cs" />
     <Compile Include="Models\Tech.cs" />
     <Compile Include="Models\Ticket.cs" />
@@ -234,6 +239,11 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202107211822332_InitialCreate.resx">
+      <DependentUpon>202107211822332_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
