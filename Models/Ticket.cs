@@ -13,6 +13,7 @@ namespace ChakisTicketTracking1.Models
         // Date and time of service request
         [Display(Name ="Request Date")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime RequestDate { get; set; }
 
         // Description of user request
