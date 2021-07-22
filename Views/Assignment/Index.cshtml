@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<ChakisTicketTracking1.Models.Assignment>
 
 @{
-    ViewBag.Title = "Open Tickets";
+    ViewBag.Title = "Workloads";
 }
 
-<h2>Open Tickets</h2>
+<h2>Workloads</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -12,13 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            Tech Assigned
+            @Html.ActionLink("Tech Assigned", "Index", new { sortOrder = ViewBag.NameSortParm})
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Ticket.TicketDescription)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Ticket.RequestDate)
+            @Html.ActionLink("Request Date", "Index", new { sortOrder = ViewBag.DateSortParm})
         </th>
         <th>
             @Html.DisplayNameFor(model => model.CompletionDate)

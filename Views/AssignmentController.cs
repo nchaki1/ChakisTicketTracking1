@@ -16,9 +16,27 @@ namespace ChakisTicketTracking1.Views
         private HelpDeskContext db = new HelpDeskContext();
 
         // GET: Assignment
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
             var assignments = db.Assignments.Include(a => a.Tech).Include(a => a.Ticket);
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    assignments = assignments.OrderByDescending(a => a.Tech.LastName);
+                    break;
+                case "Date":
+                    assignments = assignments.OrderBy(a => a.Ticket.RequestDate);
+                    break;
+                case "date_desc":
+                    assignments = assignments.OrderByDescending(a => a.Ticket.RequestDate);
+                    break;
+                default:
+                    assignments = assignments.OrderBy(a => a.Tech.LastName);
+                    break;
+            }
             return View(assignments.ToList());
         }
 
