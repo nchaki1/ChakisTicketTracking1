@@ -12,10 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Tech.LastName)
+            Tech Assigned
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Ticket.TicketDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ticket.RequestDate)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.CompletionDate)
@@ -27,25 +30,28 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tech.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ticket.TicketDescription)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CompletionDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Notes)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.AssignmentID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.AssignmentID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.AssignmentID })
-        </td>
-    </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Tech.LastName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Ticket.TicketDescription)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Ticket.RequestDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CompletionDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Notes)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.AssignmentID }) |
+        @Html.ActionLink("Details", "Details", new { id = item.AssignmentID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.AssignmentID })
+    </td>
+</tr>
 }
 
 </table>
